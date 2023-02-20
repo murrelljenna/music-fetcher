@@ -24,6 +24,8 @@ dependencies:
 - split
 - HUnit >= 1.6.2.0
 - text
+- req >= 3.13.0
+- aeson >= 2.0.3.0
 
 ghc-options:
 - -Wall
