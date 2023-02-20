@@ -26,11 +26,7 @@ query = "query" =: ("name:Pink Floyd" :: Text)
 
 headers = mappend mempty header "User-Agent" "MusicBrainz API / Rate Limiting - MusicBrainz"
 main :: IO ()
--- You can either make your monad an instance of 'MonadHttp', or use
--- 'runReq' in any IO-enabled monad without defining new instances.
 main = runReq defaultHttpConfig $ do
-  -- One function—full power and flexibility, automatic retrying on timeouts
-  -- and such, automatic connection sharing.
   r <-
     req
       GET -- method
