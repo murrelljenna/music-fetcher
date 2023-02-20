@@ -25,7 +25,9 @@ source-repository head
 
 library
   exposed-modules:
+      Api
       Lib
+      Models
   other-modules:
       Paths_music_fetcher
   hs-source-dirs:
