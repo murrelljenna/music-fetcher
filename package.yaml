@@ -23,6 +23,7 @@ dependencies:
 - base >= 4.7 && < 5
 - split
 - HUnit >= 1.6.2.0
+- text
 
 ghc-options:
 - -Wall
