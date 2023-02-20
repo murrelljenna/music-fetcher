@@ -25,5 +25,5 @@ instance FromJSON QueryResponse where
 
 main :: IO ()
 main = runReq defaultHttpConfig $ do
-  r <- fetchArtists
+  r <- fetchArtists "Pink Floyd"
   liftIO $ print r

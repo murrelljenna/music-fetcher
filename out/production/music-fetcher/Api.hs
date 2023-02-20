@@ -8,10 +8,9 @@ import Network.HTTP.Req
 import Models
 import Data.Text (Text)
 
-
-fetchArtists :: Req QueryResponse
-fetchArtists = do
-                 let query = "query" =: ("name:Pink Floyd" :: Text)
+fetchArtists :: Text -> Req QueryResponse
+fetchArtists name = do
+                 let query = "query" =: ("name:" <> name :: Text)
                  let headers = mappend mempty header "User-Agent" "MusicBrainz API / Rate Limiting - MusicBrainz"
                  r <-
                    req
