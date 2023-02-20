@@ -14,14 +14,15 @@ data QueryResponse = QueryResponse {
 } deriving (Generic, Show)
 
 data Artist = Artist {
-  name :: Text
+    name :: Text
+  , id :: Text
 } deriving (Generic, Show)
 
 instance FromJSON Artist where
 
 instance FromJSON QueryResponse where
 
-query = "query" =: ("name:pink" :: Text)
+query = "query" =: ("name:Pink Floyd" :: Text)
 
 headers = mappend mempty header "User-Agent" "MusicBrainz API / Rate Limiting - MusicBrainz"
 main :: IO ()
