@@ -5,7 +5,12 @@ module Main (main) where
 import Control.Monad.IO.Class
 import Data.Aeson
 import Network.HTTP.Req
+import Data.Text (Text)
 
+
+query = "query" =: ("name:pink" :: Text)
+
+headers = mappend mempty header "User-Agent" "MusicBrainz API / Rate Limiting - MusicBrainz"
 main :: IO ()
 -- You can either make your monad an instance of 'MonadHttp', or use
 -- 'runReq' in any IO-enabled monad without defining new instances.
@@ -15,8 +20,8 @@ main = runReq defaultHttpConfig $ do
   r <-
     req
       GET -- method
-      (https "musicbrainz.org" /: "ws" /: "2" /: "artist" /: "?query-name:pink") -- safe by construction URL
+      (https "musicbrainz.org" /: "ws" /: "2" /: "artist") -- safe by construction URL
       NoReqBody
       jsonResponse -- specify how to interpret response
-      mempty -- query params, headers, explicit port number, etc.
+      (mappend headers query) -- query params, headers, explicit port number, etc.
   liftIO $ print (responseBody r :: Value)
