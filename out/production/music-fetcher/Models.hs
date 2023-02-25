@@ -1,6 +1,6 @@
 {-# LANGUAGE DeriveGeneric #-}
 
-module Models where
+module Models(QueryResponse, Artist) where
 
 import GHC.Generics
 import Data.Aeson
@@ -8,6 +8,10 @@ import Data.Text (Text)
 
 data QueryResponse = QueryResponse {
   artists :: [Artist]
+} deriving (Generic, Show)
+
+data DiscQueryResponse = DiscQueryResponse {
+  
 } deriving (Generic, Show)
 
 data Artist = Artist {
