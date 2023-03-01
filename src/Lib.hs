@@ -12,3 +12,4 @@ trim = f . f
 
 parseCandidatesFromTitle :: String -> [String]
 parseCandidatesFromTitle s = map (\s -> trim s) (splitOn "-" s)
+

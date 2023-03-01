@@ -6,8 +6,10 @@ module Main (main) where
 import Control.Monad.IO.Class
 import Network.HTTP.Req
 import Api
+import Models
 
 main :: IO ()
 main = runReq defaultHttpConfig $ do
-  r <- fetchArtists "Pink Floyd"
-  liftIO $ print r
+  artistResponse <- fetchArtists "Pink Floyd"
+  discography <- fetchArtistDiscography $ firstArtist artistResponse
+  liftIO $ print discography
