@@ -12,4 +12,5 @@ main :: IO ()
 main = runReq defaultHttpConfig $ do
   artistResponse <- fetchArtists "Pink Floyd"
   discography <- fetchArtistDiscography $ firstArtist artistResponse
-  liftIO $ print discography
+  let refinedDiscography = refineDiscography discography
+  liftIO $ print refinedDiscography
