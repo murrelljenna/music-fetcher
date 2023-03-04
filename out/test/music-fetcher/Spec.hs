@@ -1,7 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 import Test.HUnit
-import Lib
+import Input
 import Models(PreliminaryRecordingsResponse(..), MaybeRecording(..), Recording(..), refineDiscography)
 
 parseCandidatesTest :: Test
