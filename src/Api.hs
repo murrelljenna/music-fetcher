@@ -7,10 +7,10 @@ import Network.HTTP.Req
 import Models
 import Data.Aeson.Types (Object)
 
-fetchArtists :: [String] -> Req [QueryResponse]
+fetchArtists :: [String] -> Req [Artist]
 fetchArtists names = sequence $ fetchArtist <$> names
 
-fetchArtist :: String -> Req QueryResponse
+fetchArtist :: String -> Req Artist
 fetchArtist name = do
                  let query = "query" =: ("name:" <> name :: String)
                  let headers = mappend mempty header "User-Agent" "MusicBrainz API / Rate Limiting - MusicBrainz"
@@ -21,7 +21,7 @@ fetchArtist name = do
                      NoReqBody
                      jsonResponse -- specify how to interpret response
                      (mappend headers query) -- query params, headers, explicit port number, etc.
-                 liftIO $ return (responseBody r :: QueryResponse)
+                 liftIO $ return $ firstArtist (responseBody r :: QueryResponse)
 
 fetchArtistDiscography :: Artist -> String -> Req PreliminaryRecordingsResponse
 fetchArtistDiscography artist title = do
