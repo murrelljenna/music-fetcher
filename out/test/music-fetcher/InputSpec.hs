@@ -11,7 +11,8 @@ spec = TestList [parseCandidatesTest]
 fixture :: [(Title, [Candidate])]
 fixture = [
   ("Zoot Woman - Grey Day",[("Zoot Woman", "Grey Day"), ("Grey Day", "Zoot Woman")])
-  , ("Autechre - Montreal",[("Autechre", "Montreals"), ("Montreal", "Autechre")])
+  , ("Autechre - Montreal",[("Autechre", "Montreal"), ("Montreal", "Autechre")])
+  , ("Bailey - Intelligent Drum & Bass",[("Bailey", "Intelligent Drum & Bass"), ("Intelligent Drum & Bass", "Bailey")])
   ]
 
 expectedInputs :: [Title]

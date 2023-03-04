@@ -13,7 +13,7 @@ import Input
 main :: IO ()
 main = runReq defaultHttpConfig $ do
   artistResponse <- fetchArtists "Pink Floyd"
-  _ <- liftIO $ fetchFilenames >>= print
+  _ <- liftIO $ fetchFilenames >>= \paths -> print $ parseCandidatesFromTitle <$> paths
   discography <- fetchArtistDiscography (firstArtist artistResponse) "Wish you were here"
   let refinedDiscography = refineDiscography discography
   liftIO $ print refinedDiscography
