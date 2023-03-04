@@ -1,6 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module Input(parseCandidatesFromTitle, fetchFilenames, Title, Fragment, Candidate) where
+module Input(parseCandidatesFromTitle, fetchFilenames, Title, Fragment, Candidate, simpleParse) where
 
 import Data.Text hiding (dropWhile, reverse, map, splitOn, last, filter, init, concat)
 import System.Directory
@@ -41,5 +41,9 @@ candidatesFromFragments [f1, f2, f3] = candidatesFromFragments [f1 <> f2, f3] ++
 candidatesFromFragments [f1, f2, f3, f4] = candidatesFromFragments [f1 <> f2, f3 <> f4] ++ candidatesFromFragments [f1 <> f2 <> f3, f4]
 candidatesFromFragments _ = []
 
+simpleParse :: Title -> [Candidate]
+simpleParse t = case (splitOn "-" t) of
+  [x, y] -> [(x, y)]
+  _ -> []
 parseCandidatesFromTitle :: Title -> [Candidate]
 parseCandidatesFromTitle t = (candidatesFromFragments . fragment t) "-"

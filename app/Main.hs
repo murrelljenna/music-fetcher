@@ -7,13 +7,14 @@ import Control.Monad.IO.Class
 import Network.HTTP.Req
 import Api
 import Models
-import Data.Text
 import Input
 
 main :: IO ()
 main = runReq defaultHttpConfig $ do
-  artistResponse <- fetchArtists "Pink Floyd"
-  _ <- liftIO $ fetchFilenames >>= \paths -> print $ parseCandidatesFromTitle <$> paths
-  discography <- fetchArtistDiscography (firstArtist artistResponse) "Wish you were here"
-  let refinedDiscography = refineDiscography discography
-  liftIO $ print refinedDiscography
+  mp3s <- liftIO $ fetchFilenames >>= \paths -> return $ (parseCandidatesFromTitle) <$> paths
+  let titles = head <$> filter (not . null) mp3s
+  _ <- liftIO $ print titles
+  artistResponse <- fetchArtists $ fst <$> titles
+  --discography <- fetchArtistDiscography (firstArtist artistResponse) "Wish you were here"
+  --let refinedDiscography = refineDiscography discography
+  liftIO $ print artistResponse

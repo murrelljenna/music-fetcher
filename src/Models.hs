@@ -6,7 +6,6 @@ module Models(QueryResponse, Artist, refineDiscography, firstArtist, RecordingsQ
 import Prelude hiding (id)
 import GHC.Generics
 import Data.Aeson
-import Data.Text (Text)
 
 data QueryResponse = QueryResponse {
   artists :: [Artist]
@@ -18,8 +17,8 @@ data RecordingsQueryResponse = RecordingsQueryResponse {
 } deriving (Generic, Show)
 
 data Recording = Recording {
-  title :: Text
-  , date :: Text
+  title :: String
+  , date :: String
 } deriving (Generic, Show, Eq)
 
 data PreliminaryRecordingsResponse = PreliminaryRecordingsResponse {
@@ -28,16 +27,16 @@ data PreliminaryRecordingsResponse = PreliminaryRecordingsResponse {
   } deriving (Generic, Show)
 
 data MaybeRecording = MaybeRecording {
-  title :: Text
-  , maybeDate :: Maybe Text
+  title :: String
+  , maybeDate :: Maybe String
 } deriving (Generic, Show)
 
 data Artist = Artist {
-    name :: Text
-  , id :: Text
+    name :: String
+  , id :: String
 } deriving (Generic, Show)
 
-artistId :: Artist -> Text
+artistId :: Artist -> String
 artistId artist = id artist
 
 firstArtist :: QueryResponse -> Artist
