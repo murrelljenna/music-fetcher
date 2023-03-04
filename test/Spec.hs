@@ -1,11 +1,8 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 import Test.HUnit
-import Input
+import InputSpec
 import Models(PreliminaryRecordingsResponse(..), MaybeRecording(..), Recording(..), refineDiscography)
-
-parseCandidatesTest :: Test
-parseCandidatesTest = TestCase $ assertEqual "" ["Zoot Woman", "Grey Day"] (parseCandidatesFromTitle "Zoot Woman - Grey Day")
 
 responseFixture :: PreliminaryRecordingsResponse
 responseFixture = PreliminaryRecordingsResponse 1 [MaybeRecording "My Friend Dario" (Just "2005-05-21")]
@@ -13,9 +10,8 @@ responseFixture = PreliminaryRecordingsResponse 1 [MaybeRecording "My Friend Dar
 refineDiscographyTest :: Test
 refineDiscographyTest = TestCase $ assertEqual "" (Just (Recording "My Friend Dario" "2005-05-21")) (refineDiscography responseFixture)
 
-
 tests :: Test
-tests = TestList [parseCandidatesTest, refineDiscographyTest]
+tests = TestList [InputSpec.spec, refineDiscographyTest]
 
 main :: IO Counts
 main = runTestTT tests
