@@ -12,9 +12,10 @@ import Input
 main :: IO ()
 main = runReq defaultHttpConfig $ do
   mp3s <- liftIO $ fetchFilenames >>= \paths -> return $ (parseCandidatesFromTitle) <$> paths
-  let titles = head <$> filter (not . null) mp3s
-  _ <- liftIO $ print titles
-  artistResponse <- fetchArtists $ fst <$> titles
-  --discography <- fetchArtistDiscography (firstArtist artistResponse) "Wish you were here"
-  --let refinedDiscography = refineDiscography discography
-  liftIO $ print artistResponse
+  let artistNames = head <$> filter (not . null) mp3s
+  artists <- fetchArtists $ fst <$> artistNames
+  let artistsAndTitles = zip artists $ snd <$> artistNames
+  _ <- liftIO $ print artistsAndTitles
+  discography <- sequence $ fetchArtistDiscography <$> artistsAndTitles
+  let refinedDiscography = refineDiscography <$> discography
+  liftIO $ print refinedDiscography

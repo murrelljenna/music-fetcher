@@ -23,9 +23,9 @@ fetchArtist name = do
                      (mappend headers query) -- query params, headers, explicit port number, etc.
                  liftIO $ return $ firstArtist (responseBody r :: QueryResponse)
 
-fetchArtistDiscography :: Artist -> String -> Req PreliminaryRecordingsResponse
-fetchArtistDiscography artist title = do
-                let query = "query" =: (title <> (artistId artist) :: String)
+fetchArtistDiscography :: (Artist, String) -> Req PreliminaryRecordingsResponse
+fetchArtistDiscography (artist, title) = do
+                let query = "query" =: ("\"" <> title <> "\" AND arid:" <> (artistId artist) :: String)
                 let headers = mappend mempty header "User-Agent" "MusicBrainz API / Rate Limiting - MusicBrainz"
                 r <-
                   req
