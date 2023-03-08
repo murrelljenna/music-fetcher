@@ -1,6 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module Input(parseCandidatesFromTitle, fetchFilenames, Title, Fragment, Candidate, simpleParse) where
+module Input(parseCandidatesFromTitle, fetchFilenames, Title, Fragment, Candidate, parseOnDash, candidateTitle, candidateArtist) where
 
 import Data.Text hiding (dropWhile, reverse, map, splitOn, last, filter, init, concat)
 import System.Directory
@@ -9,7 +9,13 @@ import Data.Char (isSpace)
 
 type Title = String
 type Fragment = String
-type Candidate = (String, String)
+data Candidate = Candidate String String | NoArtistCandidate String
+
+candidateArtist :: Candidate -> String
+candidateArtist (Candidate a _) = a
+
+candidateTitle :: Candidate -> String
+candidateTitle (Candidate _ t) = t
 
 testDirPath :: FilePath
 testDirPath = "C:\\Users\\Jenna\\Downloads\\testfiles"
@@ -36,14 +42,18 @@ fragment t sep = map (\s -> trim s) (splitOn sep t)
 candidatesFromFragments :: [Fragment] -> [Candidate]
 candidatesFromFragments [] = []
 candidatesFromFragments [f1] = []
-candidatesFromFragments [f1, f2] = [(f1, f2), (f2, f1)]
+candidatesFromFragments [f1, f2] = [Candidate f1 f2, Candidate f2 f1]
 candidatesFromFragments [f1, f2, f3] = candidatesFromFragments [f1 <> f2, f3] ++ candidatesFromFragments [f1, f2 <> f3]
 candidatesFromFragments [f1, f2, f3, f4] = candidatesFromFragments [f1 <> f2, f3 <> f4] ++ candidatesFromFragments [f1 <> f2 <> f3, f4]
 candidatesFromFragments _ = []
 
-simpleParse :: Title -> [Candidate]
-simpleParse t = case (splitOn "-" t) of
-  [x, y] -> [(x, y)]
+parseOnDash :: Title -> [Candidate]
+parseOnDash t = case (splitOn "-" t) of
+  [x, y] -> [Candidate x y]
   _ -> []
+
+noArtist :: Title -> [Candidate]
+noArtist t = [NoArtistCandidate t]
+
 parseCandidatesFromTitle :: Title -> [Candidate]
 parseCandidatesFromTitle t = (candidatesFromFragments . fragment t) "-"

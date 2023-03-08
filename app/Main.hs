@@ -13,8 +13,8 @@ main :: IO ()
 main = runReq defaultHttpConfig $ do
   mp3s <- liftIO $ fetchFilenames >>= \paths -> return $ (parseCandidatesFromTitle) <$> paths
   let artistNames = head <$> filter (not . null) mp3s
-  artists <- fetchArtists $ fst <$> artistNames
-  let artistsAndTitles = zip artists $ snd <$> artistNames
+  artists <- fetchArtists $ candidateArtist <$> artistNames
+  let artistsAndTitles = zip artists $ candidateTitle <$> artistNames
   _ <- liftIO $ print artistsAndTitles
   discography <- sequence $ fetchArtistDiscography <$> artistsAndTitles
   let refinedDiscography = refineDiscography <$> discography
