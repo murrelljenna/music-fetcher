@@ -6,7 +6,7 @@ module Main (main) where
 import Control.Monad.IO.Class
 import Network.HTTP.Req
 import Api
-import Models(FinalResult(..), refineDiscography)
+import Models(FinalResult(..), refineDiscography, recordingArtist)
 import Input
 
 type MaybeFinalResult = Maybe FinalResult
@@ -16,11 +16,11 @@ processCandidate (Candidate artist title _) = do
   artist <- fetchArtist artist
   discography <- fetchArtistDiscography (artist, title)
   let mostLikelyRecording = refineDiscography title discography
-  liftIO $ return $ (\r -> FinalResult (Just artist) r) <$> mostLikelyRecording
+  liftIO $ return $ (\r -> FinalResult artist r) <$> mostLikelyRecording
 processCandidate (TitleOnly title _) = do
   discography <- fetchDiscography title
   let mostLikelyRecording = refineDiscography title discography
-  liftIO $ return $ (\r -> FinalResult Nothing r) <$> mostLikelyRecording
+  liftIO $ return $ (\r -> FinalResult (recordingArtist r) r) <$> mostLikelyRecording
 
 --processCandidate (TitleOnly title _) = do
 
