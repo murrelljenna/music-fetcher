@@ -1,6 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module Api(fetchArtists, fetchArtistDiscography, fetchDiscography) where
+module Api(fetchArtists, fetchArtist, fetchArtistDiscography, fetchDiscography) where
 
 import Control.Monad.IO.Class
 import Network.HTTP.Req
@@ -48,4 +48,3 @@ fetchDiscography title = do
                    jsonResponse -- specify how to interpret response
                    (mappend headers query) -- query params, headers, explicit port number, etc.
                liftIO $ return (responseBody r :: PreliminaryRecordingsResponse)
-

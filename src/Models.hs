@@ -1,11 +1,13 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE DuplicateRecordFields #-}
-module Models(QueryResponse, Artist, refineDiscography, firstArtist, RecordingsQueryResponse, PreliminaryRecordingsResponse(..), artistId, MaybeRecording(..), Recording(..)) where
+module Models(QueryResponse, Artist, refineDiscography, firstArtist, FinalResult(..), RecordingsQueryResponse, PreliminaryRecordingsResponse(..), artistId, MaybeRecording(..), Recording(..)) where
 
 import Prelude hiding (id)
 import GHC.Generics
 import Data.Aeson
+import Input
+import Data.Char (toLower)
 
 data QueryResponse = QueryResponse {
   artists :: [Artist]
@@ -36,6 +38,11 @@ data Artist = Artist {
   , id :: String
 } deriving (Generic, Show)
 
+data FinalResult = FinalResult {
+    artist :: Maybe Artist
+    , recording :: Recording
+} deriving (Show)
+
 artistId :: Artist -> String
 artistId artist = id artist
 
@@ -62,11 +69,11 @@ instance FromJSON MaybeRecording where
 -- Sus out which discography entry to use
 -- Must have a first-release-date, use earliest first release date
 
-filterRecordings :: Maybe Recording -> MaybeRecording -> Maybe Recording
-filterRecordings Nothing (MaybeRecording t (Just md)) = Just $ Recording t md
-filterRecordings (Just (Recording _ d1)) (MaybeRecording t (Just d2)) | d2 < d1 = Just $ Recording t d2
-filterRecordings r (MaybeRecording _ (Just _)) = r
-filterRecordings r _ = r
+filterRecordings :: Title -> Maybe Recording -> MaybeRecording -> Maybe Recording
+filterRecordings expectedTitle Nothing (MaybeRecording t (Just md)) | (toLower <$> expectedTitle) == (toLower <$> t) = Just $ Recording t md
+filterRecordings expectedTitle (Just (Recording _ d1)) (MaybeRecording t (Just d2)) | d2 < d1 && (toLower <$> expectedTitle) == (toLower <$> t) = Just $ Recording t d2
+filterRecordings expectedTitle r (MaybeRecording t (Just _)) | expectedTitle == t = r
+filterRecordings _ r _ = r
 
-refineDiscography :: PreliminaryRecordingsResponse -> Maybe Recording
-refineDiscography (PreliminaryRecordingsResponse c rs) = foldl filterRecordings Nothing rs
+refineDiscography :: Title -> PreliminaryRecordingsResponse -> Maybe Recording
+refineDiscography title (PreliminaryRecordingsResponse c rs) = foldl (filterRecordings title) Nothing rs

@@ -28,6 +28,7 @@ library
       Api
       Input
       Models
+      Result
   other-modules:
       Paths_music_fetcher
   hs-source-dirs:

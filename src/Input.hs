@@ -2,7 +2,6 @@
 
 module Input(parseCandidatesFromTitle, fetchFilenames, Title, Fragment, Candidate(..), parseOnDash, candidateTitle, candidateArtist) where
 
-import Data.Text hiding (dropWhile, reverse, map, splitOn, last, filter, init, concat, foldl)
 import System.Directory
 import Data.List.Split
 import Data.Char (isSpace)
@@ -16,6 +15,7 @@ candidateArtist (Candidate a _ _) = a
 
 candidateTitle :: Candidate -> String
 candidateTitle (Candidate _ t _) = t
+candidateTitle (TitleOnly t _) = t
 
 testDirPath :: FilePath
 testDirPath = "C:\\Users\\Jenna\\Downloads\\testfiles"
@@ -32,12 +32,20 @@ filterForMp3 fps = filter isMp3 fps
 trimExtension :: [FilePath] -> [FilePath]
 trimExtension fps = (concat . init . (splitOn ".")) <$> fps
 
-trim :: String -> String
-trim = f . f
+trimWhitespace :: String -> String
+trimWhitespace = f . f
           where f = reverse . dropWhile isSpace
 
+trimQuotes :: String -> String
+trimQuotes t = case (head t, last t) of
+  ('\'', '\'') -> (init . tail) t
+  _ -> t
+
+trim :: String -> String
+trim = trimQuotes . trimWhitespace
+
 fragment :: Title -> String -> [Fragment]
-fragment t sep = map (\s -> trim s) (splitOn sep t)
+fragment t sep = map (\s -> trimWhitespace s) (splitOn sep t)
 
 parseOnDash :: Title -> [Candidate]
 parseOnDash t = case (splitOn "-" t) of

@@ -1,0 +1,2 @@
+module Result where
+
