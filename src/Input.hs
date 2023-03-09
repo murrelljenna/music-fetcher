@@ -1,21 +1,21 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module Input(parseCandidatesFromTitle, fetchFilenames, Title, Fragment, Candidate, parseOnDash, candidateTitle, candidateArtist) where
+module Input(parseCandidatesFromTitle, fetchFilenames, Title, Fragment, Candidate(..), parseOnDash, candidateTitle, candidateArtist) where
 
-import Data.Text hiding (dropWhile, reverse, map, splitOn, last, filter, init, concat)
+import Data.Text hiding (dropWhile, reverse, map, splitOn, last, filter, init, concat, foldl)
 import System.Directory
 import Data.List.Split
 import Data.Char (isSpace)
 
 type Title = String
 type Fragment = String
-data Candidate = Candidate String String | NoArtistCandidate String
+data Candidate = Candidate String String String | TitleOnly String String deriving (Eq, Show)
 
 candidateArtist :: Candidate -> String
-candidateArtist (Candidate a _) = a
+candidateArtist (Candidate a _ _) = a
 
 candidateTitle :: Candidate -> String
-candidateTitle (Candidate _ t) = t
+candidateTitle (Candidate _ t _) = t
 
 testDirPath :: FilePath
 testDirPath = "C:\\Users\\Jenna\\Downloads\\testfiles"
@@ -39,21 +39,17 @@ trim = f . f
 fragment :: Title -> String -> [Fragment]
 fragment t sep = map (\s -> trim s) (splitOn sep t)
 
-candidatesFromFragments :: [Fragment] -> [Candidate]
-candidatesFromFragments [] = []
-candidatesFromFragments [f1] = []
-candidatesFromFragments [f1, f2] = [Candidate f1 f2, Candidate f2 f1]
-candidatesFromFragments [f1, f2, f3] = candidatesFromFragments [f1 <> f2, f3] ++ candidatesFromFragments [f1, f2 <> f3]
-candidatesFromFragments [f1, f2, f3, f4] = candidatesFromFragments [f1 <> f2, f3 <> f4] ++ candidatesFromFragments [f1 <> f2 <> f3, f4]
-candidatesFromFragments _ = []
-
 parseOnDash :: Title -> [Candidate]
 parseOnDash t = case (splitOn "-" t) of
-  [x, y] -> [Candidate x y]
+  [x, y] -> [Candidate (trim x) (trim y) t]
   _ -> []
 
 noArtist :: Title -> [Candidate]
-noArtist t = [NoArtistCandidate t]
+noArtist t = [TitleOnly t t]
+
+allCandidateParsers = [parseOnDash, noArtist]
 
 parseCandidatesFromTitle :: Title -> [Candidate]
-parseCandidatesFromTitle t = (candidatesFromFragments . fragment t) "-"
+parseCandidatesFromTitle t = foldl (\c f -> case c of
+  [] -> f t
+  cs -> cs) [] allCandidateParsers

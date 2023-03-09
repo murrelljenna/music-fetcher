@@ -1,6 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module Api(fetchArtists, fetchArtistDiscography) where
+module Api(fetchArtists, fetchArtistDiscography, fetchDiscography) where
 
 import Control.Monad.IO.Class
 import Network.HTTP.Req
@@ -35,4 +35,17 @@ fetchArtistDiscography (artist, title) = do
                     jsonResponse -- specify how to interpret response
                     (mappend headers query) -- query params, headers, explicit port number, etc.
                 liftIO $ return (responseBody r :: PreliminaryRecordingsResponse)
+
+fetchDiscography :: String -> Req PreliminaryRecordingsResponse
+fetchDiscography title = do
+               let query = "query" =: ("\"" <> title :: String)
+               let headers = mappend mempty header "User-Agent" "MusicBrainz API / Rate Limiting - MusicBrainz"
+               r <-
+                 req
+                   GET -- method
+                   (https "musicbrainz.org" /: "ws" /: "2" /: "recording") -- safe by construction URL
+                   NoReqBody
+                   jsonResponse -- specify how to interpret response
+                   (mappend headers query) -- query params, headers, explicit port number, etc.
+               liftIO $ return (responseBody r :: PreliminaryRecordingsResponse)
 
