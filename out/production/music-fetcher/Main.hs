@@ -7,7 +7,8 @@ import Control.Monad.IO.Class
 import Network.HTTP.Req
 import Api
 import Models(FinalResult(..), refineDiscography, recordingArtist)
-import Input
+import FileInput
+import Candidate
 
 type MaybeFinalResult = Maybe FinalResult
 
@@ -22,14 +23,12 @@ processCandidate (TitleOnly title _) = do
   let mostLikelyRecording = refineDiscography title discography
   liftIO $ return $ (\r -> FinalResult (recordingArtist r) r) <$> mostLikelyRecording
 
---processCandidate (TitleOnly title _) = do
-
 processCandidates :: [Candidate] -> Req MaybeFinalResult
 processCandidates cs = processCandidate $ head cs
 
 main :: IO ()
 main = runReq defaultHttpConfig $ do
-  mp3s <- liftIO $ fetchFilenames >>= \paths -> return $ (parseCandidatesFromTitle) <$> paths
+  mp3s <- liftIO $ fetchFilenames >>= \paths -> return $ (parseCandidates) <$> paths
   let artistNames = head <$> filter (not . null) mp3s
   _ <- liftIO $ print artistNames
   results <- sequence $ processCandidate <$> artistNames

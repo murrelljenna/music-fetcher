@@ -1,9 +1,10 @@
-module InputSpec(spec) where
+module CandidateSpec(spec) where
 import Test.HUnit
-import Input(Candidate(..), parseCandidatesFromTitle, Title)
+import Candidate(Candidate(..), parseCandidates)
+import FileInput
 
 parseCandidatesTest :: Test
-parseCandidatesTest = TestCase $ assertEqual "All expected inputs match expected results" expectedResults (parseCandidatesFromTitle <$> expectedInputs)
+parseCandidatesTest = TestCase $ assertEqual "All expected inputs match expected results" expectedResults (parseCandidates <$> expectedInputs)
 
 spec :: Test
 spec = TestList [parseCandidatesTest]

@@ -1,12 +1,12 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE DuplicateRecordFields #-}
-module Models(QueryResponse, Artist, refineDiscography, recordingArtist, firstArtist, FinalResult(..), RecordingsQueryResponse, PreliminaryRecordingsResponse(..), artistId, MaybeRecording(..), Recording(..)) where
+module Models(QueryResponse, Artist(..), refineDiscography, recordingArtist, firstArtist, FinalResult(..), RecordingsQueryResponse, PreliminaryRecordingsResponse(..), artistId, MaybeRecording(..), Recording(..)) where
 
 import Prelude hiding (id)
 import GHC.Generics
 import Data.Aeson
-import Input
+import FileInput
 import Data.Char (toLower)
 import Data.Aeson.Types (Parser)
 
