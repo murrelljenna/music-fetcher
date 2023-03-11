@@ -8,7 +8,7 @@ import Data.List.Split
 type Title = String
 
 testDirPath :: FilePath
-testDirPath = "C:\\Users\\Jenna\\Downloads\\testfiles"
+testDirPath = "E:\\Music\\Alternative"
 
 fetchFilenames :: IO [FilePath]
 fetchFilenames = trimExtension . filterForMp3 <$> listDirectory testDirPath
