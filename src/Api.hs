@@ -13,7 +13,7 @@ fetchArtists names = sequence $ fetchArtist <$> names
 fetchArtist :: String -> Req Artist
 fetchArtist name = do
                  let query = "query" =: ("name:" <> name :: String)
-                 let headers = mappend mempty header "User-Agent" "MusicBrainz API / Rate Limiting - MusicBrainz"
+                 let headers = mappend mempty header "User-Agent" "music-fetcher/0.1.0 ( https://github.com/murrelljenna/music-fetcher )"
                  r <-
                    req
                      GET -- method

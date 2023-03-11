@@ -3,6 +3,7 @@
 
 module Main (main) where
 
+import Control.Concurrent
 import Control.Monad
 import Control.Monad.IO.Class
 import Network.HTTP.Req
@@ -16,6 +17,7 @@ type MaybeFinalResult = Maybe FinalResult
 processCandidate :: Candidate -> Req MaybeFinalResult
 processCandidate (Candidate artist title _) = do
   artist <- fetchArtist artist
+  _ <- liftIO $ threadDelay 1000000
   discography <- fetchArtistDiscography (artist, title)
   let mostLikelyRecording = refineDiscography title discography
   liftIO $ return $ (\r -> FinalResult artist r) <$> mostLikelyRecording
@@ -35,6 +37,5 @@ main :: IO ()
 main = runReq defaultHttpConfig $ do
   mp3s <- liftIO $ fetchFilenames >>= \paths -> return $ (parseCandidates) <$> paths
   let candidates =  filter (not . null) mp3s
-  _ <- liftIO $ print candidates
   results <- sequence $ processCandidates <$> candidates
   liftIO $ print results
