@@ -5,14 +5,13 @@ module Api(fetchArtists, fetchArtist, fetchArtistDiscography, fetchDiscography) 
 import Control.Monad.IO.Class
 import Network.HTTP.Req
 import Models
-import Data.Aeson.Types (Object)
 
 fetchArtists :: [String] -> Req [Artist]
 fetchArtists names = sequence $ fetchArtist <$> names
 
 fetchArtist :: String -> Req Artist
-fetchArtist name = do
-                 let query = "query" =: ("name:" <> name :: String)
+fetchArtist artistName = do
+                 let query = "query" =: ("name:" <> artistName :: String)
                  let headers = mappend mempty header "User-Agent" "music-fetcher/0.1.0 ( https://github.com/murrelljenna/music-fetcher )"
                  r <-
                    req
@@ -24,8 +23,8 @@ fetchArtist name = do
                  liftIO $ return $ firstArtist (responseBody r :: QueryResponse)
 
 fetchArtistDiscography :: (Artist, String) -> Req PreliminaryRecordingsResponse
-fetchArtistDiscography (artist, title) = do
-                let query = "query" =: ("\"" <> title <> "\" AND arid:" <> (artistId artist) :: String)
+fetchArtistDiscography (a, t) = do
+                let query = "query" =: ("\"" <> t <> "\" AND arid:" <> (artistId a) :: String)
                 let headers = mappend mempty header "User-Agent" "MusicBrainz API / Rate Limiting - MusicBrainz"
                 r <-
                   req
@@ -37,8 +36,8 @@ fetchArtistDiscography (artist, title) = do
                 liftIO $ return (responseBody r :: PreliminaryRecordingsResponse)
 
 fetchDiscography :: String -> Req PreliminaryRecordingsResponse
-fetchDiscography title = do
-               let query = "query" =: ("\"" <> title :: String)
+fetchDiscography t = do
+               let query = "query" =: ("\"" <> t :: String)
                let headers = mappend mempty header "User-Agent" "MusicBrainz API / Rate Limiting - MusicBrainz"
                r <-
                  req

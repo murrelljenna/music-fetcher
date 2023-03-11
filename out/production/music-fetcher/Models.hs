@@ -50,7 +50,7 @@ data FinalResult = FinalResult {
 } deriving (Show)
 
 artistId :: Artist -> String
-artistId artist = id artist
+artistId a = id a
 
 firstArtist :: QueryResponse -> Artist
 firstArtist res = head $ artists res
@@ -72,8 +72,8 @@ instance FromJSON MaybeRecording where
           <*> v .:? "first-release-date"
           <*> (do
             artistCredit <- head <$> (v .: "artist-credit" :: Parser [Object])
-            let artist = (artistCredit .: "artist" :: Parser Artist)
-            artist)
+            let artistParser = (artistCredit .: "artist" :: Parser Artist)
+            artistParser)
 
 -- Sus out which discography entry to use
 -- Must have a first-release-date, use earliest first release date
@@ -85,4 +85,4 @@ filterRecordings expectedTitle r (MaybeRecording t (Just _) _) | expectedTitle =
 filterRecordings _ r _ = r
 
 refineDiscography :: Title -> PreliminaryRecordingsResponse -> Maybe Recording
-refineDiscography title (PreliminaryRecordingsResponse c rs) = foldl (filterRecordings title) Nothing rs
+refineDiscography t (PreliminaryRecordingsResponse _ rs) = foldl (filterRecordings t) Nothing rs
