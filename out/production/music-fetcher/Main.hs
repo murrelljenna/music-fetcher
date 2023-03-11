@@ -3,6 +3,7 @@
 
 module Main (main) where
 
+import Control.Monad
 import Control.Monad.IO.Class
 import Network.HTTP.Req
 import Api
@@ -23,13 +24,17 @@ processCandidate (TitleOnly title _) = do
   let mostLikelyRecording = refineDiscography title discography
   liftIO $ return $ (\r -> FinalResult (recordingArtist r) r) <$> mostLikelyRecording
 
+processUntilSuitableResult :: MaybeFinalResult -> Candidate -> Req MaybeFinalResult
+processUntilSuitableResult Nothing c = processCandidate c
+processUntilSuitableResult result _ = pure result
+
 processCandidates :: [Candidate] -> Req MaybeFinalResult
-processCandidates cs = processCandidate $ head cs
+processCandidates cs = foldM processUntilSuitableResult Nothing cs
 
 main :: IO ()
 main = runReq defaultHttpConfig $ do
   mp3s <- liftIO $ fetchFilenames >>= \paths -> return $ (parseCandidates) <$> paths
-  let artistNames = head <$> filter (not . null) mp3s
-  _ <- liftIO $ print artistNames
-  results <- sequence $ processCandidate <$> artistNames
+  let candidates =  filter (not . null) mp3s
+  _ <- liftIO $ print candidates
+  results <- sequence $ processCandidates <$> candidates
   liftIO $ print results
