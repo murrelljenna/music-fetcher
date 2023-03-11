@@ -15,8 +15,8 @@ import Candidate
 type MaybeFinalResult = Maybe FinalResult
 
 processCandidate :: Candidate -> Req MaybeFinalResult
-processCandidate (Candidate artist title _) = do
-  artist <- fetchArtist artist
+processCandidate (Candidate artistName title _) = do
+  artist <- fetchArtist artistName
   _ <- liftIO $ threadDelay 1000000
   discography <- fetchArtistDiscography (artist, title)
   let mostLikelyRecording = refineDiscography title discography
