@@ -8,9 +8,10 @@ import Control.Monad
 import Control.Monad.IO.Class
 import Network.HTTP.Req
 import Api
-import Models(FinalResult(..), refineDiscography, recordingArtist)
+import Models(FinalResult(..), recordingArtist)
 import FileInput
 import Candidate
+import CheckResult
 
 type MaybeFinalResult = Maybe FinalResult
 
@@ -19,11 +20,11 @@ processCandidate (Candidate artistName t _) = do
   a <- fetchArtist artistName
   _ <- liftIO $ threadDelay 1000000
   discography <- fetchArtistDiscography (a, t)
-  let mostLikelyRecording = refineDiscography t discography
+  let mostLikelyRecording = checkResult t discography
   liftIO $ return $ (\r -> FinalResult a r) <$> mostLikelyRecording
 processCandidate (TitleOnly title _) = do
   discography <- fetchDiscography title
-  let mostLikelyRecording = refineDiscography title discography
+  let mostLikelyRecording = checkResult title discography
   liftIO $ return $ (\r -> FinalResult (recordingArtist r) r) <$> mostLikelyRecording
 
 processUntilSuitableResult :: MaybeFinalResult -> Candidate -> Req MaybeFinalResult

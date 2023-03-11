@@ -27,6 +27,7 @@ library
   exposed-modules:
       Api
       Candidate
+      CheckResult
       FileInput
       Models
   other-modules:
@@ -67,6 +68,7 @@ test-suite music-fetcher-test
   main-is: Spec.hs
   other-modules:
       CandidateSpec
+      CheckResultSpec
       Paths_music_fetcher
   hs-source-dirs:
       test

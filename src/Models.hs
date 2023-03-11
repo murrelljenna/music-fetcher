@@ -1,13 +1,12 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE DuplicateRecordFields #-}
-module Models(QueryResponse, Artist(..), refineDiscography, recordingArtist, firstArtist, FinalResult(..), RecordingsQueryResponse, PreliminaryRecordingsResponse(..), artistId, MaybeRecording(..), Recording(..)) where
+module Models(QueryResponse, Artist(..), recordingArtist, firstArtist, FinalResult(..), RecordingsQueryResponse, PreliminaryRecordingsResponse(..), artistId, MaybeRecording(..), Recording(..)) where
 
 import Prelude hiding (id)
 import GHC.Generics
 import Data.Aeson
 import FileInput
-import Data.Char (toLower)
 import Data.Aeson.Types (Parser)
 
 data QueryResponse = QueryResponse {
@@ -92,11 +91,4 @@ instance FromJSON MaybeRecording where
 -- Sus out which discography entry to use
 -- Must have a first-release-date, use earliest first release date
 
-filterRecordings :: Title -> Maybe Recording -> MaybeRecording -> Maybe Recording
-filterRecordings expectedTitle Nothing (MaybeRecording t (Just md) a album trackPos) | (toLower <$> expectedTitle) == (toLower <$> t) = Just $ Recording t md a album trackPos
-filterRecordings expectedTitle (Just (Recording _ d1 a _ _)) (MaybeRecording t (Just d2) _ album trackPos) | d2 < d1 && (toLower <$> expectedTitle) == (toLower <$> t) = Just $ Recording t d2 a album trackPos
-filterRecordings expectedTitle r (MaybeRecording t (Just _) _ _ _) | expectedTitle == t = r
-filterRecordings _ r _ = r
 
-refineDiscography :: Title -> PreliminaryRecordingsResponse -> Maybe Recording
-refineDiscography t (PreliminaryRecordingsResponse _ rs) = foldl (filterRecordings t) Nothing rs
