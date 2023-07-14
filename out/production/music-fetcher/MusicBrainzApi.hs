@@ -1,6 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module Api(fetchArtists, fetchArtist, fetchArtistDiscography, fetchDiscography) where
+module MusicBrainzApi(fetchArtists, fetchArtist, fetchArtistDiscography, fetchDiscography) where
 
 import Control.Monad.IO.Class
 import Network.HTTP.Req

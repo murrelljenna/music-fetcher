@@ -25,11 +25,11 @@ source-repository head
 
 library
   exposed-modules:
-      Api
       Candidate
       CheckResult
       FileInput
       Models
+      MusicBrainzApi
   other-modules:
       Paths_music_fetcher
   hs-source-dirs:

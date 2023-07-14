@@ -7,7 +7,7 @@ import Control.Concurrent
 import Control.Monad
 import Control.Monad.IO.Class
 import Network.HTTP.Req
-import Api
+import MusicBrainzApi
 import Models(FinalResult(..), recordingArtist)
 import FileInput
 import Candidate
