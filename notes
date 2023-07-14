@@ -1,1 +1,3 @@
 api -> Preprocess -> MusicBrainzClient -> Postprocess ---->
+
+Entire app is a String -> FinalResult

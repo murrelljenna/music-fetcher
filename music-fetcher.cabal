@@ -29,7 +29,7 @@ library
       CheckResult
       FileInput
       Models
-      MusicBrainzApi
+      MusicBrainzClient
   other-modules:
       Paths_music_fetcher
   hs-source-dirs:
