@@ -7,7 +7,7 @@ import Control.Concurrent
 import Control.Monad
 import Control.Monad.IO.Class
 import Network.HTTP.Req
-import MusicBrainzApi
+import MusicBrainzClient
 import Models(FinalResult(..), recordingArtist)
 import FileInput
 import Candidate
@@ -40,3 +40,5 @@ main = runReq defaultHttpConfig $ do
   let candidates =  filter (not . null) mp3s
   results <- sequence $ processCandidates <$> candidates
   liftIO $ print results
+  
+-- app :: String -> FinalResult

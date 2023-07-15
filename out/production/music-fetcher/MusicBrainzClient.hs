@@ -1,6 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module MusicBrainzApi(fetchArtists, fetchArtist, fetchArtistDiscography, fetchDiscography) where
+module MusicBrainzClient(fetchArtists, fetchArtist, fetchArtistDiscography, fetchDiscography) where
 
 import Control.Monad.IO.Class
 import Network.HTTP.Req
@@ -22,7 +22,7 @@ fetchArtist artistName = do
                      (mappend headers query) -- query params, headers, explicit port number, etc.
                  liftIO $ return $ firstArtist (responseBody r :: QueryResponse)
 
-fetchArtistDiscography :: (Artist, String) -> Req PreliminaryRecordingsResponse
+fetchArtistDiscography :: (Artist, String) -> Req RecordingsResponse
 fetchArtistDiscography (a, t) = do
                 let query = "query" =: ("\"" <> t <> "\" AND arid:" <> (artistId a) :: String)
                 let headers = mappend mempty header "User-Agent" "MusicBrainz API / Rate Limiting - MusicBrainz"
@@ -33,9 +33,9 @@ fetchArtistDiscography (a, t) = do
                     NoReqBody
                     jsonResponse -- specify how to interpret response
                     (mappend headers query) -- query params, headers, explicit port number, etc.
-                liftIO $ return (responseBody r :: PreliminaryRecordingsResponse)
+                liftIO $ return (responseBody r :: RecordingsResponse)
 
-fetchDiscography :: String -> Req PreliminaryRecordingsResponse
+fetchDiscography :: String -> Req RecordingsResponse
 fetchDiscography t = do
                let query = "query" =: ("\"" <> t :: String)
                let headers = mappend mempty header "User-Agent" "MusicBrainz API / Rate Limiting - MusicBrainz"
@@ -46,4 +46,4 @@ fetchDiscography t = do
                    NoReqBody
                    jsonResponse -- specify how to interpret response
                    (mappend headers query) -- query params, headers, explicit port number, etc.
-               liftIO $ return (responseBody r :: PreliminaryRecordingsResponse)
+               liftIO $ return (responseBody r :: RecordingsResponse)
