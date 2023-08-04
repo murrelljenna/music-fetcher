@@ -1,3 +1,10 @@
 api -> Preprocess -> MusicBrainzClient -> Postprocess ---->
 
 Entire app is a String -> FinalResult
+
+Candidate becomes Preprocess
+CheckResult becomes PostProcess
+Get rid of FileInput
+Split models into Candidate and CheckResult, get rid of Models
+Create api
+
