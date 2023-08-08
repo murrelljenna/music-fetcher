@@ -1,13 +1,14 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE DuplicateRecordFields #-}
+{-# LANGUAGE BlockArguments #-}
 module Models(QueryResponse, Artist(..), recordingArtist, firstArtist, FinalResult(..), RecordingsResponse(..), artistId, Recording(..)) where
 
 import Prelude hiding (id)
 import GHC.Generics
 import Data.Aeson
-import FileInput
 import Data.Aeson.Types (Parser)
+import Data.Either (rights)
 
 data QueryResponse = QueryResponse {
   artists :: [Artist]
@@ -21,7 +22,7 @@ data Recording = Recording {
   , position :: String
 } deriving (Generic, Show, Eq)
 
-data RecordingsResponse = PreliminaryRecordingsResponse {
+data RecordingsResponse = RecordingsResponse {
   count :: Int
   , maybeRecordings :: [Recording]
   } deriving (Generic, Show)
@@ -50,9 +51,9 @@ instance FromJSON Artist where
 instance FromJSON QueryResponse where
 
 instance FromJSON RecordingsResponse where
-      parseJSON = withObject "PreliminaryRecordingsResponse" $ \v -> PreliminaryRecordingsResponse
+      parseJSON = withObject "PreliminaryRecordingsResponse" $ \v -> RecordingsResponse
           <$> v .: "count"
-          <*> v .: "recordings"
+          <*> v .: "recordings" 
 instance FromJSON Recording where
       parseJSON = withObject "MaybeRecording" $ \v -> Recording
           <$> v .: "title"

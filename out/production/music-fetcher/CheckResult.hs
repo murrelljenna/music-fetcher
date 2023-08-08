@@ -11,4 +11,4 @@ filterRecordings expectedTitle r (Recording t _ _ _ _) | expectedTitle == t = r
 filterRecordings _ r _ = r
 
 checkResult :: Title -> RecordingsResponse -> Maybe Recording
-checkResult t (PreliminaryRecordingsResponse _ rs) = foldl (filterRecordings t) Nothing rs
+checkResult t (RecordingsResponse _ rs) = foldl (filterRecordings t) Nothing rs

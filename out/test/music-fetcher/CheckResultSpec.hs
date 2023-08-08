@@ -6,7 +6,7 @@ import Models
 import CheckResult
 
 spec :: Test
-spec = TestList [oneRecordingSpec, noDateSpec, noRecordingSpec]
+spec = TestList [oneRecordingSpec, noRecordingSpec]
 
 oneRecordingSpec :: Test
 oneRecordingSpec = TestCase $ assertEqual
@@ -14,14 +14,14 @@ oneRecordingSpec = TestCase $ assertEqual
   oneRecordingExpectedResults
   ((\tuple -> case tuple of (t, rs) -> checkResult t rs) <$> oneRecordingExpectedInputs)
 
-oneRecordingFixture :: [((Title, PreliminaryRecordingsResponse), Maybe Recording)]
+oneRecordingFixture :: [((Title, RecordingsResponse), Maybe Recording)]
 oneRecordingFixture = [
   (("Grey Day"
-  , PreliminaryRecordingsResponse 1 [(MaybeRecording "Grey Day" (Just "2008-11-27") (Artist "johny exampleseed" "blargh") "idunno" "hey")])
+  , RecordingsResponse 1 [(Recording "Grey Day" "2008-11-27" (Artist "johny exampleseed" "blargh") "idunno" "hey")])
   , Just (Recording "Grey Day" "2008-11-27" (Artist "johny exampleseed" "blargh") "idunno" "hey"))
   ]
 
-oneRecordingExpectedInputs :: [(Title, PreliminaryRecordingsResponse)]
+oneRecordingExpectedInputs :: [(Title, RecordingsResponse)]
 oneRecordingExpectedInputs = fst <$> oneRecordingFixture
 
 oneRecordingExpectedResults :: [Maybe Recording]
@@ -35,14 +35,14 @@ noRecordingSpec = TestCase $ assertEqual
   noRecordingExpectedResults
   ((\tuple -> case tuple of (t, rs) -> checkResult t rs) <$> noRecordingExpectedInputs)
 
-noFixture :: [((Title, PreliminaryRecordingsResponse), Maybe Recording)]
+noFixture :: [((Title, RecordingsResponse), Maybe Recording)]
 noFixture = [
               (("Grey Day"
-              , PreliminaryRecordingsResponse 1 [])
+              , RecordingsResponse 1 [])
               , Nothing)
               ]
 
-noRecordingExpectedInputs :: [(Title, PreliminaryRecordingsResponse)]
+noRecordingExpectedInputs :: [(Title, RecordingsResponse)]
 noRecordingExpectedInputs = fst <$> noFixture
 
 noRecordingExpectedResults :: [Maybe Recording]
@@ -56,14 +56,14 @@ noDateSpec = TestCase $ assertEqual
   noDateExpectedResults
   ((\tuple -> case tuple of (t, rs) -> checkResult t rs) <$> noDateExpectedInputs)
 
-noDateFixture :: [((Title, PreliminaryRecordingsResponse), Maybe Recording)]
+noDateFixture :: [((Title, RecordingsResponse), Maybe Recording)]
 noDateFixture = [
               (("Grey Day"
-              , PreliminaryRecordingsResponse 1 [(MaybeRecording "Grey Day" Nothing (Artist "johny exampleseed" "blargh") "idunno" "hey")])
+              , RecordingsResponse 1 [(Recording "Grey Day" "05-02-2021" (Artist "johny exampleseed" "blargh") "idunno" "hey")])
               , Nothing)
               ]
 
-noDateExpectedInputs :: [(Title, PreliminaryRecordingsResponse)]
+noDateExpectedInputs :: [(Title, RecordingsResponse)]
 noDateExpectedInputs = fst <$> noDateFixture
 
 noDateExpectedResults :: [Maybe Recording]
