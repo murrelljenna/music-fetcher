@@ -1,4 +1,4 @@
-module Candidate(parseCandidates, Candidate(..)) where
+module Preprocess(parseCandidates, Candidate(..)) where
 
 import FileInput
 import Data.Char (isSpace)

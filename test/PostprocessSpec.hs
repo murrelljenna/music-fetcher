@@ -1,9 +1,9 @@
-module CheckResultSpec(spec) where
+module PostprocessSpec(spec) where
 
 import Test.HUnit
 import FileInput
 import Models
-import CheckResult
+import Postprocess
 
 spec :: Test
 spec = TestList [oneRecordingSpec, noRecordingSpec]

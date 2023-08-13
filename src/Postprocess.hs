@@ -1,4 +1,4 @@
-module CheckResult(checkResult) where
+module Postprocess(checkResult) where
 
 import Models
 import FileInput (Title)

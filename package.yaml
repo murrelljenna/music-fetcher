@@ -27,6 +27,7 @@ dependencies:
 - req >= 3.13.0
 - aeson >= 2.0.3.0
 - directory >= 1.3.6.2
+- scotty
 
 ghc-options:
 - -Wall

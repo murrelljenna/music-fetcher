@@ -1,11 +1,11 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 import Test.HUnit
-import CandidateSpec
-import CheckResultSpec
+import PreprocessSpec
+import PostprocessSpec
 
 tests :: Test
-tests = TestList [CandidateSpec.spec, CheckResultSpec.spec]
+tests = TestList [PreprocessSpec.spec, PostprocessSpec.spec]
 
 main :: IO Counts
 main = runTestTT tests

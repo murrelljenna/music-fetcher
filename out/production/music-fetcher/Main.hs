@@ -10,8 +10,8 @@ import Network.HTTP.Req
 import MusicBrainzClient
 import Models(FinalResult(..), recordingArtist)
 import FileInput
-import Candidate
-import CheckResult
+import Preprocess
+import Postprocess
 
 type MaybeFinalResult = Maybe FinalResult
 

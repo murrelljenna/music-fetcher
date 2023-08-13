@@ -1,6 +1,6 @@
-module CandidateSpec(spec) where
+module PreprocessSpec(spec) where
 import Test.HUnit
-import Candidate(Candidate(..), parseCandidates)
+import Preprocess(Candidate(..), parseCandidates)
 import FileInput
 
 parseCandidatesTest :: Test
