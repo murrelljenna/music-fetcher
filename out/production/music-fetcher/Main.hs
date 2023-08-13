@@ -13,9 +13,7 @@ import FileInput
 import Preprocess
 import Postprocess
 
-type MaybeFinalResult = Maybe FinalResult
-
-processCandidate :: Candidate -> Req MaybeFinalResult
+processCandidate :: Candidate -> Req (Maybe FinalResult)
 processCandidate (Candidate artistName t _) = do
   a <- fetchArtist artistName
   _ <- liftIO $ threadDelay 1000000
@@ -27,11 +25,11 @@ processCandidate (TitleOnly title _) = do
   let mostLikelyRecording = checkResult title discography
   liftIO $ return $ (\r -> FinalResult (recordingArtist r) r) <$> mostLikelyRecording
 
-processUntilSuitableResult :: MaybeFinalResult -> Candidate -> Req MaybeFinalResult
+processUntilSuitableResult :: Maybe FinalResult -> Candidate -> Req (Maybe FinalResult)
 processUntilSuitableResult Nothing c = processCandidate c
 processUntilSuitableResult result _ = pure result
 
-processCandidates :: [Candidate] -> Req MaybeFinalResult
+processCandidates :: [Candidate] -> Req (Maybe FinalResult)
 processCandidates cs = foldM processUntilSuitableResult Nothing cs
 
 main :: IO ()
