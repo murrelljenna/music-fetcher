@@ -16,6 +16,7 @@ import Postprocess
 
 import Data.Monoid (mconcat)
 import Data.Text.Lazy (pack)
+import Data.Maybe (maybeToList)
 
 processCandidate :: Candidate -> Req (Maybe FinalResult)
 processCandidate (Candidate artistName t _) = do
@@ -48,4 +49,6 @@ app = scotty 3000 $
   get "/:title" $ do
     title <- param "title"
     let candidates = parseCandidates title
-    html $ mconcat $ (pack . show) <$> candidates
+    _ <- liftIO $ print candidates
+    result <- runReq defaultHttpConfig $ processCandidates candidates
+    html $ mconcat . maybeToList $ pack . show <$> result
