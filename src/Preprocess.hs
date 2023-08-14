@@ -3,6 +3,9 @@ module Preprocess(parseCandidates, Candidate(..)) where
 import FileInput
 import Data.Char (isSpace)
 import Data.List.Split
+import Data.Text (pack)
+
+-- Candidate represents an input to the MusicBrainz client - this value could represent a valid artist/track but may not.
 
 data Candidate = Candidate String String String | TitleOnly String String deriving (Eq, Show)
 
